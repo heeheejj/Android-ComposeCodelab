@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp(modifier: Modifier = Modifier){
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
+    // remember를 사용하면 컴포저블이 컴포지션에 유지되는 동안에만 작동한다.
+    // 기기 회전, 다크모드 변경 등으로 전체 활동이 다시 시작되면 모든 상태가 손실되기때문에 온보딩 화면이 다시 뜨게된다.
+    // 이를 방지하기 위해 rememberSaveable 사용
+
     Surface(modifier) {
         if (shouldShowOnboarding){
             OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
